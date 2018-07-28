@@ -14,7 +14,7 @@ import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
-import com.google.ar.core.examples.java.augmentedimage.sceneform.AugmentedImageNode;
+import com.nikunami.jouretnuit.sceneform.AugmentedImageNode;
 import com.google.ar.core.examples.java.common.helpers.CameraPermissionHelper;
 import com.google.ar.core.examples.java.common.helpers.FullScreenHelper;
 import com.nikunami.common.helpers.SnackbarHelper;
@@ -168,11 +168,15 @@ public class MuseumActivity extends AppCompatActivity {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
                 // Check camera image matches our reference image
                 if (augmentedImage.getName().equals("gamejamlogo")) {
-                    AugmentedImageNode node = new AugmentedImageNode(this, "model.sfb");
-                    node.setImage(augmentedImage);
-                    arSceneView.getScene().addChild(node);
+                    AugmentedImageNode gameJamLogoNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 1);
+                    gameJamLogoNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(gameJamLogoNode);
                 }
-
+                if (augmentedImage.getName().equals("delorean")){
+                    AugmentedImageNode deloreanNode = new AugmentedImageNode(this, "model.sfb", 0);
+                    deloreanNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(deloreanNode);
+                }
             }
         }
     }
@@ -189,20 +193,35 @@ public class MuseumActivity extends AppCompatActivity {
     private boolean setupAugmentedImageDb(Config config) {
         AugmentedImageDatabase augmentedImageDatabase;
 
-        Bitmap augmentedImageBitmap = loadAugmentedImage();
-        if (augmentedImageBitmap == null) {
+        Bitmap gameJamBitmap = loadGameJamLogoAugmentedImage();
+        if (gameJamBitmap == null) {
+            return false;
+        }
+
+        Bitmap deloreanBitmap = loadDeloreanAugmentedImage();
+        if (deloreanBitmap == null) {
             return false;
         }
 
         augmentedImageDatabase = new AugmentedImageDatabase(session);
-        augmentedImageDatabase.addImage("gamejamlogo", augmentedImageBitmap);
+        augmentedImageDatabase.addImage("gamejamlogo", gameJamBitmap);
+        augmentedImageDatabase.addImage("delorean", deloreanBitmap);
 
         config.setAugmentedImageDatabase(augmentedImageDatabase);
         return true;
     }
 
-    private Bitmap loadAugmentedImage() {
+    private Bitmap loadGameJamLogoAugmentedImage() {
         try (InputStream is = getAssets().open("gamejamlogo.jpg")) {
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+        }
+        return null;
+    }
+
+    private Bitmap loadDeloreanAugmentedImage() {
+        try (InputStream is = getAssets().open("delorean_bkp.jpg")) {
             return BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             Log.e(TAG, "IO exception loading augmented image bitmap.", e);

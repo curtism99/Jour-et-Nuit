@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         VideoView videoview = findViewById(R.id.JeNuitIntroVideo);
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+ R.raw.jenuitintrovideo);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+ R.raw.jenuitintromovement);
         videoview.setVideoURI(uri);
         videoview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override

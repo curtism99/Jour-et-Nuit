@@ -233,7 +233,7 @@ public class MuseumActivity extends AppCompatActivity {
                     beastLoaded = true;
                 }
                 if (augmentedImage.getName().equals("blood")){
-                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "Final-Blood-2.sfb", 2);
+                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "Final-Blood.sfb", 2);
                     bloodNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(bloodNode);
                     chimePlayer.start();

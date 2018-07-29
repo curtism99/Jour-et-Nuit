@@ -33,3 +33,40 @@ dependencies {
     implementation 'com.google.ar.sceneform:core:1.3.0'
     implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.3.0'
 }
+
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('src/main/assets/ICT-Joy-Stick-002.obj',
+        'default',
+        'src/main/assets/ICT-Joy-Stick-002.sfa',
+        'src/main/assets/ICT-Joy-Stick-002')
+
+sceneform.asset('src/main/assets/ICT-Joy-Stick-003.obj',
+        'default',
+        'src/main/assets/ICT-Joy-Stick-003.sfa',
+        'src/main/assets/ICT-Joy-Stick-003')
+
+sceneform.asset('src/main/assets/ICT-Joy-Stick-004.obj',
+        'default',
+        'src/main/assets/ICT-Joy-Stick-004.sfa',
+        'src/main/assets/ICT-Joy-Stick-004')
+
+sceneform.asset('src/main/assets/Rune_Main-01.obj',
+        'default',
+        'src/main/assets/Rune_Main-01.sfa',
+        'src/main/assets/Rune_Main-01')
+
+sceneform.asset('src/main/assets/Rune-main-color.obj',
+        'default',
+        'src/main/assets/Rune-main-color.sfa',
+        'src/main/assets/Rune-main-color')
+
+sceneform.asset('src/main/assets/STICK.obj',
+        'default',
+        'src/main/assets/STICK.sfa',
+        'src/main/assets/STICK')
+
+sceneform.asset('src/main/assets/Rune-Main-03.obj',
+        'default',
+        'src/main/assets/Rune-Main-03.sfa',
+        'src/main/assets/Rune-Main-03')

@@ -2,6 +2,7 @@
 package com.nikunami.jouretnuit.sceneform;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
@@ -21,15 +22,27 @@ public class AugmentedImageNode extends AnchorNode {
 
     private AugmentedImage image;
     private static CompletableFuture<ModelRenderable> modelFuture;
-    private static CompletableFuture<ModelRenderable> deloreanModelFuture;
     private static CompletableFuture<ModelRenderable> gameJamModelFuture;
+    private static CompletableFuture<ModelRenderable> beastModelFuture;
+    private static CompletableFuture<ModelRenderable> bloodModelFuture;
+    private static CompletableFuture<ModelRenderable> finModelFuture;
+    private static CompletableFuture<ModelRenderable> noctiqueModelFuture;
+    private MediaPlayer _ChimePlayer;
 
-    public AugmentedImageNode(Context context, String filename, int index) {
+    public AugmentedImageNode(Context context, String filename, int index, MediaPlayer chimePlayer) {
+
+        _ChimePlayer = chimePlayer;
 
         switch (index) {
-            case 0: modelFuture = loadDeloranModel(context, filename);
+            case 0: modelFuture = loadGameJamModel(context, filename);
                 break;
-            case 1: modelFuture = loadGameJamModel(context, filename);
+            case 1: modelFuture = loadBeastModel(context, filename);
+                break;
+            case 2: modelFuture = loadBloodModel(context, filename);
+                break;
+            case 3: modelFuture = loadFinModel(context, filename);
+                break;
+            case 4: modelFuture = loadNoctiqueModel(context, filename);
                 break;
         }
 
@@ -41,14 +54,39 @@ public class AugmentedImageNode extends AnchorNode {
         //}
     }
 
-    private CompletableFuture<ModelRenderable> loadDeloranModel(Context context, String filename)
+    private CompletableFuture<ModelRenderable> loadBeastModel(Context context, String filename)
     {
-        if (deloreanModelFuture == null) {
-            deloreanModelFuture = ModelRenderable.builder().setRegistryId("modelFuture")
+        if (beastModelFuture == null) {
+            beastModelFuture = ModelRenderable.builder().setRegistryId("modelFuture")
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        return deloreanModelFuture;
+        _ChimePlayer.start();
+        return beastModelFuture;
+    }
+
+    private CompletableFuture<ModelRenderable> loadBloodModel(Context context, String filename)
+    {
+        if (bloodModelFuture == null) {
+            bloodModelFuture = ModelRenderable.builder().setRegistryId("modelFuture")
+                    .setSource(context, Uri.parse(filename))
+                    .build();
+        }
+        _ChimePlayer.start();
+
+        return bloodModelFuture;
+    }
+
+    private CompletableFuture<ModelRenderable> loadFinModel(Context context, String filename)
+    {
+        if (finModelFuture == null) {
+            finModelFuture = ModelRenderable.builder().setRegistryId("modelFuture")
+                    .setSource(context, Uri.parse(filename))
+                    .build();
+        }
+        _ChimePlayer.start();
+
+        return finModelFuture;
     }
 
     private CompletableFuture<ModelRenderable> loadGameJamModel(Context context, String filename)
@@ -59,7 +97,22 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
+        _ChimePlayer.start();
+
         return gameJamModelFuture;
+    }
+
+    private CompletableFuture<ModelRenderable> loadNoctiqueModel(Context context, String filename)
+    {
+        if (noctiqueModelFuture == null)
+        {
+            noctiqueModelFuture = ModelRenderable.builder().setRegistryId("modelFuture")
+                    .setSource(context, Uri.parse(filename))
+                    .build();
+        }
+        _ChimePlayer.start();
+
+        return noctiqueModelFuture;
     }
 
 

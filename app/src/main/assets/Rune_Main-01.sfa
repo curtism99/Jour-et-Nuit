@@ -1,0 +1,42 @@
+{
+   materials: [
+      {
+         name: "initialShadingGroup",
+         parameters: [
+            {
+               baseColor: null,
+            },
+            {
+               baseColorTint: [
+                  0.5,
+                  0.5,
+                  0.5,
+                  1,
+               ],
+            },
+            {
+               metallic: 0,
+            },
+            {
+               roughness: 1,
+            },
+            {
+               opacity: null,
+            },
+         ],
+         source: "build/sceneform_sdk/default_materials/obj_material.sfm",
+      },
+   ],
+   model: {
+      attributes: [
+         "Position",
+         "TexCoord",
+         "Orientation",
+      ],
+      collision: {},
+      file: "src/main/assets/Rune_Main-01.obj",
+      name: "Rune_Main-01",
+      scale: 0.40921000000000002,
+   },
+   version: "0.51:1",
+}

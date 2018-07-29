@@ -1,10 +1,15 @@
 package com.nikunami.jouretnuit;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.ar.core.ArCoreApk;
@@ -26,6 +31,7 @@ import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationExceptio
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.FrameTime;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -43,6 +49,12 @@ public class MuseumActivity extends AppCompatActivity {
 
     private boolean shouldConfigureSession = false;
 
+    MediaPlayer musicPlayer;
+    MediaPlayer chimePlayer;
+    private ProgressBar mProgressBar;
+    private boolean ProgressBarVisible = true;
+    private ProgressDialog nDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +65,26 @@ public class MuseumActivity extends AppCompatActivity {
         installRequested = false;
 
         initializeSceneView();
+
+        musicPlayer = MediaPlayer.create(this, Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.soundscapeloop));
+        musicPlayer.setLooping(true);
+        musicPlayer.setVolume(100,100);
+        musicPlayer.start();
+
+        chimePlayer = MediaPlayer.create(this, Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.chime));
+        chimePlayer.setLooping(false);
+        chimePlayer.setVolume(100,100);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (musicPlayer.isPlaying() == false)
+        {
+            musicPlayer.start();
+        }
 
         if (session == null) {
             Exception exception = null;
@@ -160,6 +187,10 @@ public class MuseumActivity extends AppCompatActivity {
     }
 
     private void onUpdateFrame(FrameTime frameTime) {
+        if (ProgressBarVisible)
+        {
+            mProgressBar = null;
+        }
         Frame frame = arSceneView.getArFrame();
         Collection<AugmentedImage> updatedAugmentedImages =
                 frame.getUpdatedTrackables(AugmentedImage.class);
@@ -167,15 +198,30 @@ public class MuseumActivity extends AppCompatActivity {
         for (AugmentedImage augmentedImage : updatedAugmentedImages) {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
                 // Check camera image matches our reference image
-                if (augmentedImage.getName().equals("gamejamlogo")) {
-                    AugmentedImageNode gameJamLogoNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 1);
-                    gameJamLogoNode.setImage(augmentedImage);
-                    arSceneView.getScene().addChild(gameJamLogoNode);
+                if (augmentedImage.getName().equals("gamejamlogo")){
+                    AugmentedImageNode gameJamNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 0, chimePlayer);
+                    gameJamNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(gameJamNode);
                 }
-                if (augmentedImage.getName().equals("delorean")){
-                    AugmentedImageNode deloreanNode = new AugmentedImageNode(this, "model.sfb", 0);
-                    deloreanNode.setImage(augmentedImage);
-                    arSceneView.getScene().addChild(deloreanNode);
+                if (augmentedImage.getName().equals("beast")){
+                    AugmentedImageNode beastNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 1, chimePlayer);
+                    beastNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(beastNode);
+                }
+                if (augmentedImage.getName().equals("blood")){
+                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 2, chimePlayer);
+                    bloodNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(bloodNode);
+                }
+                if (augmentedImage.getName().equals("fin")){
+                    AugmentedImageNode finNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 3, chimePlayer);
+                    finNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(finNode);
+                }
+                if (augmentedImage.getName().equals("noctique")){
+                    AugmentedImageNode noctiqueNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 4, chimePlayer);
+                    noctiqueNode.setImage(augmentedImage);
+                    arSceneView.getScene().addChild(noctiqueNode);
                 }
             }
         }
@@ -198,17 +244,65 @@ public class MuseumActivity extends AppCompatActivity {
             return false;
         }
 
-        Bitmap deloreanBitmap = loadDeloreanAugmentedImage();
-        if (deloreanBitmap == null) {
+        Bitmap beastBitmap = loadBeastAugmentedImage();
+        if (beastBitmap == null)
+        {
+            return false;
+        }
+
+        Bitmap bloodBitmap = loadBloodAugmentedImage();
+        if (bloodBitmap == null)
+        {
+            return false;
+        }
+
+        Bitmap finBitmap = loadFinAugmentedImage();
+        if (finBitmap == null){
+            return false;
+        }
+
+        Bitmap noctiqueBitmap = loadNoctiqueAugmentedImage();
+        if (noctiqueBitmap == null)
+        {
             return false;
         }
 
         augmentedImageDatabase = new AugmentedImageDatabase(session);
         augmentedImageDatabase.addImage("gamejamlogo", gameJamBitmap);
-        augmentedImageDatabase.addImage("delorean", deloreanBitmap);
+        augmentedImageDatabase.addImage("beast", beastBitmap);
+        augmentedImageDatabase.addImage("blood", bloodBitmap);
+        augmentedImageDatabase.addImage("fin", finBitmap);
+        augmentedImageDatabase.addImage("noctique", noctiqueBitmap);
 
         config.setAugmentedImageDatabase(augmentedImageDatabase);
         return true;
+    }
+
+    private Bitmap loadBeastAugmentedImage() {
+        try (InputStream is = getAssets().open("TrackingImages/Beast.jpg")) {
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+        }
+        return null;
+    }
+
+    private Bitmap loadBloodAugmentedImage() {
+        try (InputStream is = getAssets().open("TrackingImages/blood.jpg")) {
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+        }
+        return null;
+    }
+
+    private Bitmap loadFinAugmentedImage() {
+        try (InputStream is = getAssets().open("TrackingImages/Fin.jpg")) {
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+        }
+        return null;
     }
 
     private Bitmap loadGameJamLogoAugmentedImage() {
@@ -220,12 +314,25 @@ public class MuseumActivity extends AppCompatActivity {
         return null;
     }
 
-    private Bitmap loadDeloreanAugmentedImage() {
-        try (InputStream is = getAssets().open("delorean_bkp.jpg")) {
+    private Bitmap loadNoctiqueAugmentedImage() {
+        try (InputStream is = getAssets().open("TrackingImages/Noctique.jpg")) {
             return BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             Log.e(TAG, "IO exception loading augmented image bitmap.", e);
         }
         return null;
     }
+
+
+    @CallSuper
+    public void OnDestroy() {
+        musicPlayer.stop();
+        musicPlayer.release();
+    }
+
+    @CallSuper
+    public void OnStop() {
+        musicPlayer.stop();
+    }
+
 }

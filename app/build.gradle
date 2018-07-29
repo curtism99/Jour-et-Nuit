@@ -70,3 +70,18 @@ sceneform.asset('src/main/assets/Rune-Main-03.obj',
         'default',
         'src/main/assets/Rune-Main-03.sfa',
         'src/main/assets/Rune-Main-03')
+
+sceneform.asset('src/main/assets/Rune-Main-05.obj',
+        'default',
+        'src/main/assets/Rune-Main-05.sfa',
+        'src/main/assets/Rune-Main-05')
+
+sceneform.asset('src/main/assets/find-the-controller-main-rune.obj',
+        'default',
+        'src/main/assets/find-the-controller-main-rune.sfa',
+        'src/main/assets/find-the-controller-main-rune')
+
+sceneform.asset('src/main/assets/find-the-controller.obj',
+        'default',
+        'src/main/assets/find-the-controller.sfa',
+        'src/main/assets/find-the-controller')

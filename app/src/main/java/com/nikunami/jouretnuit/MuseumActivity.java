@@ -19,6 +19,7 @@ import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
+import com.google.ar.sceneform.Node;
 import com.nikunami.jouretnuit.sceneform.AugmentedImageNode;
 import com.google.ar.core.examples.java.common.helpers.CameraPermissionHelper;
 import com.google.ar.core.examples.java.common.helpers.FullScreenHelper;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 
 public class MuseumActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -51,9 +53,15 @@ public class MuseumActivity extends AppCompatActivity {
 
     MediaPlayer musicPlayer;
     MediaPlayer chimePlayer;
-    private ProgressBar mProgressBar;
-    private boolean ProgressBarVisible = true;
-    private ProgressDialog nDialog;
+
+    private boolean beastLoaded = false;
+    private boolean bloodLoaded = false;
+    private boolean finLoaded = false;
+    private boolean noctiqueLoaded = false;
+    private boolean nightMusicActive = true;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,7 @@ public class MuseumActivity extends AppCompatActivity {
 
         initializeSceneView();
 
-        musicPlayer = MediaPlayer.create(this, Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.soundscapeloop));
+        musicPlayer = MediaPlayer.create(this, getMusicSource(nightMusicActive));
         musicPlayer.setLooping(true);
         musicPlayer.setVolume(100,100);
         musicPlayer.start();
@@ -187,44 +195,93 @@ public class MuseumActivity extends AppCompatActivity {
     }
 
     private void onUpdateFrame(FrameTime frameTime) {
-        if (ProgressBarVisible)
-        {
-            mProgressBar = null;
-        }
+
         Frame frame = arSceneView.getArFrame();
         Collection<AugmentedImage> updatedAugmentedImages =
                 frame.getUpdatedTrackables(AugmentedImage.class);
 
         for (AugmentedImage augmentedImage : updatedAugmentedImages) {
             if (augmentedImage.getTrackingState() == TrackingState.TRACKING) {
+
+                if (beastLoaded && bloodLoaded && noctiqueLoaded)
+                {
+                    nightMusicActive = false;
+
+                    musicPlayer.stop();
+                    musicPlayer.release();
+                    musicPlayer = null;
+
+                    musicPlayer = MediaPlayer.create(this, getMusicSource(nightMusicActive));
+                    musicPlayer.setLooping(true);
+                    musicPlayer.setVolume(100,100);
+                    musicPlayer.start();
+                }
+
                 // Check camera image matches our reference image
                 if (augmentedImage.getName().equals("gamejamlogo")){
-                    AugmentedImageNode gameJamNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 0, chimePlayer);
+                    AugmentedImageNode gameJamNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 0);
                     gameJamNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(gameJamNode);
+                    chimePlayer.start();
+                    // TODO - Move Chime Player back from AugmentedImageNode to here
                 }
                 if (augmentedImage.getName().equals("beast")){
-                    AugmentedImageNode beastNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 1, chimePlayer);
+                    AugmentedImageNode beastNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 1);
                     beastNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(beastNode);
+                    chimePlayer.start();
+                    beastLoaded = true;
                 }
                 if (augmentedImage.getName().equals("blood")){
-                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 2, chimePlayer);
+                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "find-the-controller.sfb", 2);
                     bloodNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(bloodNode);
+                    chimePlayer.start();
+                    bloodLoaded = true;
                 }
                 if (augmentedImage.getName().equals("fin")){
-                    AugmentedImageNode finNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 3, chimePlayer);
+                    AugmentedImageNode finNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 3);
                     finNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(finNode);
+                    finLoaded = true;
                 }
                 if (augmentedImage.getName().equals("noctique")){
-                    AugmentedImageNode noctiqueNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 4, chimePlayer);
+                    AugmentedImageNode noctiqueNode = new AugmentedImageNode(this, "find-the-controller-main-rune.sfb", 4);
                     noctiqueNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(noctiqueNode);
+
+                    chimePlayer.start();
+                    noctiqueLoaded = true;
+                }
+                if (augmentedImage.getName().equals("reset")){
+                    List<Node> SceneNodes = arSceneView.getScene().getChildren();
+
+                    if (SceneNodes.size() > 1)
+                    {
+                        for (int i = SceneNodes.size() - 1; i > 1; i--) {
+                            arSceneView.getScene().removeChild(SceneNodes.get(i));
+                        }
+                    }
+                    chimePlayer.start();
+                    beastLoaded = false;
                 }
             }
         }
+    }
+
+    private Uri getMusicSource(boolean nightActive)
+    {
+        Uri sourceUri = null;
+
+        if (nightActive)
+        {
+            sourceUri = Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.soundscapeloop);
+        }
+        else {
+            sourceUri = Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.starless);
+        }
+
+        return sourceUri;
     }
 
     private void configureSession() {
@@ -267,12 +324,20 @@ public class MuseumActivity extends AppCompatActivity {
             return false;
         }
 
+        Bitmap resetBitmap = loadResetAugmentedImage();
+        if (resetBitmap == null)
+        {
+            return false;
+        }
+
         augmentedImageDatabase = new AugmentedImageDatabase(session);
         augmentedImageDatabase.addImage("gamejamlogo", gameJamBitmap);
         augmentedImageDatabase.addImage("beast", beastBitmap);
         augmentedImageDatabase.addImage("blood", bloodBitmap);
         augmentedImageDatabase.addImage("fin", finBitmap);
         augmentedImageDatabase.addImage("noctique", noctiqueBitmap);
+        augmentedImageDatabase.addImage("reset", resetBitmap);
+
 
         config.setAugmentedImageDatabase(augmentedImageDatabase);
         return true;
@@ -288,7 +353,7 @@ public class MuseumActivity extends AppCompatActivity {
     }
 
     private Bitmap loadBloodAugmentedImage() {
-        try (InputStream is = getAssets().open("TrackingImages/blood.jpg")) {
+        try (InputStream is = getAssets().open("TrackingImages/blood-picture.jpg")) {
             return BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             Log.e(TAG, "IO exception loading augmented image bitmap.", e);
@@ -323,15 +388,26 @@ public class MuseumActivity extends AppCompatActivity {
         return null;
     }
 
+    private Bitmap loadResetAugmentedImage() {
+        try (InputStream is = getAssets().open("TrackingImages/reset.jpg")) {
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+        }
+        return null;
+    }
 
-    @CallSuper
-    public void OnDestroy() {
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         musicPlayer.stop();
         musicPlayer.release();
     }
 
-    @CallSuper
-    public void OnStop() {
+    @Override
+    public void onStop() {
+        super.onStop();
         musicPlayer.stop();
     }
 

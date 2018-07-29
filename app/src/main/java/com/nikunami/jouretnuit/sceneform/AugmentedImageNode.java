@@ -27,11 +27,8 @@ public class AugmentedImageNode extends AnchorNode {
     private static CompletableFuture<ModelRenderable> bloodModelFuture;
     private static CompletableFuture<ModelRenderable> finModelFuture;
     private static CompletableFuture<ModelRenderable> noctiqueModelFuture;
-    private MediaPlayer _ChimePlayer;
 
-    public AugmentedImageNode(Context context, String filename, int index, MediaPlayer chimePlayer) {
-
-        _ChimePlayer = chimePlayer;
+    public AugmentedImageNode(Context context, String filename, int index) {
 
         switch (index) {
             case 0: modelFuture = loadGameJamModel(context, filename);
@@ -61,7 +58,6 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        _ChimePlayer.start();
         return beastModelFuture;
     }
 
@@ -72,8 +68,6 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        _ChimePlayer.start();
-
         return bloodModelFuture;
     }
 
@@ -84,8 +78,6 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        _ChimePlayer.start();
-
         return finModelFuture;
     }
 
@@ -97,8 +89,6 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        _ChimePlayer.start();
-
         return gameJamModelFuture;
     }
 
@@ -110,8 +100,6 @@ public class AugmentedImageNode extends AnchorNode {
                     .setSource(context, Uri.parse(filename))
                     .build();
         }
-        _ChimePlayer.start();
-
         return noctiqueModelFuture;
     }
 

@@ -219,34 +219,34 @@ public class MuseumActivity extends AppCompatActivity {
 
                 // Check camera image matches our reference image
                 if (augmentedImage.getName().equals("gamejamlogo")){
-                    AugmentedImageNode gameJamNode = new AugmentedImageNode(this, "ICT-Joy-Stick-004.sfb", 0);
+                    AugmentedImageNode gameJamNode = new AugmentedImageNode(this, "Final-Controller.sfb", 0);
                     gameJamNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(gameJamNode);
                     chimePlayer.start();
                     // TODO - Move Chime Player back from AugmentedImageNode to here
                 }
                 if (augmentedImage.getName().equals("beast")){
-                    AugmentedImageNode beastNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 1);
+                    AugmentedImageNode beastNode = new AugmentedImageNode(this, "Final-Beast.sfb", 1);
                     beastNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(beastNode);
                     chimePlayer.start();
                     beastLoaded = true;
                 }
                 if (augmentedImage.getName().equals("blood")){
-                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "find-the-controller.sfb", 2);
+                    AugmentedImageNode bloodNode = new AugmentedImageNode(this, "Final-Blood-2.sfb", 2);
                     bloodNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(bloodNode);
                     chimePlayer.start();
                     bloodLoaded = true;
                 }
-                if (augmentedImage.getName().equals("fin")){
+                /*if (augmentedImage.getName().equals("fin")){
                     AugmentedImageNode finNode = new AugmentedImageNode(this, "Rune-main-color.sfb", 3);
                     finNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(finNode);
                     finLoaded = true;
-                }
+                }*/
                 if (augmentedImage.getName().equals("noctique")){
-                    AugmentedImageNode noctiqueNode = new AugmentedImageNode(this, "find-the-controller-main-rune.sfb", 4);
+                    AugmentedImageNode noctiqueNode = new AugmentedImageNode(this, "Final-Noctique-01.sfb", 4);
                     noctiqueNode.setImage(augmentedImage);
                     arSceneView.getScene().addChild(noctiqueNode);
 
@@ -262,11 +262,36 @@ public class MuseumActivity extends AppCompatActivity {
                             arSceneView.getScene().removeChild(SceneNodes.get(i));
                         }
                     }
-                    chimePlayer.start();
-                    beastLoaded = false;
+                    resetChimeAndSwapMusic();
                 }
             }
         }
+    }
+
+    private void resetChimeAndSwapMusic() {
+        chimePlayer.release();
+        chimePlayer = null;
+        chimePlayer = MediaPlayer.create(this, Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.resetchime));
+        chimePlayer.setLooping(false);
+        chimePlayer.setVolume(100,100);
+        chimePlayer.start();
+
+        chimePlayer.release();
+        chimePlayer = null;
+        chimePlayer = MediaPlayer.create(this, Uri.parse("android.resource://com.nikunami.jouretnuit/" + R.raw.chime));
+        chimePlayer.setLooping(false);
+        chimePlayer.setVolume(100,100);
+
+        beastLoaded = false;
+        bloodLoaded = false;
+        noctiqueLoaded = false;
+        nightMusicActive = true;
+
+        musicPlayer.stop();
+        musicPlayer.release();
+        musicPlayer = null;
+        musicPlayer = MediaPlayer.create(this, getMusicSource(nightMusicActive));
+        musicPlayer.start();
     }
 
     private Uri getMusicSource(boolean nightActive)
@@ -313,10 +338,10 @@ public class MuseumActivity extends AppCompatActivity {
             return false;
         }
 
-        Bitmap finBitmap = loadFinAugmentedImage();
-        if (finBitmap == null){
-            return false;
-        }
+//        Bitmap finBitmap = loadFinAugmentedImage();
+//        if (finBitmap == null){
+//            return false;
+//        }
 
         Bitmap noctiqueBitmap = loadNoctiqueAugmentedImage();
         if (noctiqueBitmap == null)
@@ -334,7 +359,7 @@ public class MuseumActivity extends AppCompatActivity {
         augmentedImageDatabase.addImage("gamejamlogo", gameJamBitmap);
         augmentedImageDatabase.addImage("beast", beastBitmap);
         augmentedImageDatabase.addImage("blood", bloodBitmap);
-        augmentedImageDatabase.addImage("fin", finBitmap);
+        //augmentedImageDatabase.addImage("fin", finBitmap);
         augmentedImageDatabase.addImage("noctique", noctiqueBitmap);
         augmentedImageDatabase.addImage("reset", resetBitmap);
 
@@ -361,14 +386,14 @@ public class MuseumActivity extends AppCompatActivity {
         return null;
     }
 
-    private Bitmap loadFinAugmentedImage() {
-        try (InputStream is = getAssets().open("TrackingImages/Fin.jpg")) {
-            return BitmapFactory.decodeStream(is);
-        } catch (IOException e) {
-            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
-        }
-        return null;
-    }
+//    private Bitmap loadFinAugmentedImage() {
+//        try (InputStream is = getAssets().open("TrackingImages/Fin.jpg")) {
+//            return BitmapFactory.decodeStream(is);
+//        } catch (IOException e) {
+//            Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+//        }
+//        return null;
+//    }
 
     private Bitmap loadGameJamLogoAugmentedImage() {
         try (InputStream is = getAssets().open("gamejamlogo.jpg")) {

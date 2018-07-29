@@ -85,3 +85,38 @@ sceneform.asset('src/main/assets/find-the-controller.obj',
         'default',
         'src/main/assets/find-the-controller.sfa',
         'src/main/assets/find-the-controller')
+
+sceneform.asset('src/main/assets/find-the-controler-beast.obj',
+        'default',
+        'src/main/assets/find-the-controler-beast.sfa',
+        'src/main/assets/find-the-controler-beast')
+
+sceneform.asset('src/main/assets/Final-Blood.obj',
+        'default',
+        'src/main/assets/Final-Blood.sfa',
+        'src/main/assets/Final-Blood')
+
+sceneform.asset('src/main/assets/Final-Noctique.obj',
+        'default',
+        'src/main/assets/Final-Noctique.sfa',
+        'src/main/assets/Final-Noctique')
+
+sceneform.asset('src/main/assets/Final-Controller.obj',
+        'default',
+        'src/main/assets/Final-Controller.sfa',
+        'src/main/assets/Final-Controller')
+
+sceneform.asset('src/main/assets/Final-Beast.obj',
+        'default',
+        'src/main/assets/Final-Beast.sfa',
+        'src/main/assets/Final-Beast')
+
+sceneform.asset('src/main/assets/Final-Noctique-01.obj',
+        'default',
+        'src/main/assets/Final-Noctique-01.sfa',
+        'src/main/assets/Final-Noctique-01')
+
+sceneform.asset('src/main/assets/Final-Blood-2.obj',
+        'default',
+        'src/main/assets/Final-Blood-2.sfa',
+        'src/main/assets/Final-Blood-2')

@@ -28,7 +28,7 @@ ___
 
 Visit [https://kaizokurisu.itch.io/jour-et-nuit](https://kaizokurisu.itch.io/jour-et-nuit) to download the installable APK and download the tracking images needed to view the 3D models. Please refer to Google's [Supported Android Devices Documentation](https://developers.google.com/ar/discover/supported-devices) on ARCore by Google to see if your mobile device is capable of running *Jour et Nuit (Day and Night)*.
 
-[Watch a video demonstration of *Jour et Nuit (Day and Night)* on YouTube.](https://www.youtube.com/watch?v=naiqVhn0wec)
+[Watch a video demonstration of *Jour et Nuit (Day and Night)* on YouTube.](https://youtu.be/edLWL6yi7vQ)
 
 > Jour et Nuit (Day and Night) is an AR experience showcasing the findings of a scientific expedition to the arctic, where ancient runes were uncovered within a glacier. Now on display for the first time, these runes hold a foreboding secret within...
 
